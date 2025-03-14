@@ -1,7 +1,7 @@
 <!-- BEGIN_TF_DOCS -->
 # Default example
 
-This example demonstates different ways to use the module.
+This example demonstrates different ways to use the module.
 
 ```hcl
 variable "address_space" {

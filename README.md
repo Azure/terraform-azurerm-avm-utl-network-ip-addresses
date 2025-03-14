@@ -59,7 +59,8 @@ The following input variables are optional (have default values):
 
 Description: This variable controls whether or not the address prefixes are created in an efficient way.  
 If it is set to true, then the address prefixes will be created in an efficient way.  
-If it is set to false, then the address prefixes will be created in lexicographical order by the map key.
+If it is set to false, then the address prefixes will be created in lexographical order by the map key.
+
 For example with the address space 10.0.0.0/22 and the following prefixes:
 
   {
