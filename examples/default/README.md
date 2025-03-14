@@ -1,93 +1,117 @@
 <!-- BEGIN_TF_DOCS -->
 # Default example
 
-This deploys the module in its simplest form.
+This example demonstrates different ways to use the module.
 
 ```hcl
-terraform {
-  required_version = "~> 1.5"
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.74"
-    }
-    modtm = {
-      source  = "azure/modtm"
-      version = "~> 0.3"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.5"
-    }
+variable "address_space" {
+  type        = string
+  description = "The address space that is used the virtual network in CIDR notation"
+  default     = "10.0.0.0/22"
+}
+
+variable "address_prefixes_ordered" {
+  type        = map(number)
+  description = "The size of the subnets"
+  default = {
+    "a" = 28
+    "b" = 26
+    "c" = 26
+    "d" = 27
   }
 }
 
-provider "azurerm" {
-  features {}
-}
-
-
-## Section to provide a random Azure region for the resource group
-# This allows us to randomize the region for the resource group.
-module "regions" {
-  source  = "Azure/avm-utl-regions/azurerm"
-  version = "~> 0.1"
-}
-
-# This allows us to randomize the region for the resource group.
-resource "random_integer" "region_index" {
-  max = length(module.regions.regions) - 1
-  min = 0
-}
-## End of section to provide a random Azure region for the resource group
-
-# This ensures we have unique CAF compliant names for our resources.
-module "naming" {
-  source  = "Azure/naming/azurerm"
-  version = "~> 0.3"
-}
-
-# This is required for resource modules
-resource "azurerm_resource_group" "this" {
-  location = module.regions.regions[random_integer.region_index.result].name
-  name     = module.naming.resource_group.name_unique
+variable "address_prefixes_unordered" {
+  type        = map(number)
+  description = "The size of the subnets"
+  default = {
+    "d" = 27
+    "c" = 26
+    "b" = 26
+    "a" = 28
+  }
 }
 
 # This is the module call
-# Do not specify location here due to the randomization above.
-# Leaving location as `null` will cause the module to use the resource group location
-# with a data source.
-module "test" {
+module "efficient_address_prefixes_ordered" {
   source = "../../"
-  # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
-  # ...
-  location            = azurerm_resource_group.this.location
-  name                = "TODO" # TODO update with module.naming.<RESOURCE_TYPE>.name_unique
-  resource_group_name = azurerm_resource_group.this.name
 
-  enable_telemetry = var.enable_telemetry # see variables.tf
+  address_space    = var.address_space
+  address_prefixes = var.address_prefixes_ordered
+
+  enable_telemetry = var.enable_telemetry
+}
+
+module "inefficient_address_prefixes_ordered" {
+  source = "../../"
+
+  address_space                 = var.address_space
+  address_prefixes              = var.address_prefixes_ordered
+  address_prefix_efficient_mode = false
+
+  enable_telemetry = var.enable_telemetry
+}
+
+module "efficient_address_prefixes_unordered" {
+  source = "../../"
+
+  address_space    = var.address_space
+  address_prefixes = var.address_prefixes_unordered
+
+  enable_telemetry = var.enable_telemetry
+}
+
+module "inefficient_address_prefixes_unordered" {
+  source = "../../"
+
+  address_space                 = var.address_space
+  address_prefixes              = var.address_prefixes_unordered
+  address_prefix_efficient_mode = false
+
+  enable_telemetry = var.enable_telemetry
+}
+
+output "efficient_address_prefixes_ordered" {
+  value = module.efficient_address_prefixes_ordered.address_prefixes
+}
+
+output "inefficient_address_prefixes_ordered" {
+  value = module.inefficient_address_prefixes_ordered.address_prefixes
+}
+
+output "efficient_address_prefixes_unordered" {
+  value = module.efficient_address_prefixes_unordered.address_prefixes
+}
+
+output "inefficient_address_prefixes_unordered" {
+  value = module.inefficient_address_prefixes_unordered.address_prefixes
+}
+
+output "efficient_address_prefixes_ordered_with_details" {
+  value = module.efficient_address_prefixes_ordered.address_prefixes_with_details
+}
+
+output "inefficient_address_prefixes_ordered_with_details" {
+  value = module.inefficient_address_prefixes_ordered.address_prefixes_with_details
+}
+
+output "efficient_address_prefixes_unordered_with_details" {
+  value = module.efficient_address_prefixes_unordered.address_prefixes_with_details
+}
+
+output "inefficient_address_prefixes_unordered_with_details" {
+  value = module.inefficient_address_prefixes_unordered.address_prefixes_with_details
 }
 ```
 
 <!-- markdownlint-disable MD033 -->
 ## Requirements
 
-The following requirements are needed by this module:
-
-- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.5)
-
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.74)
-
-- <a name="requirement_modtm"></a> [modtm](#requirement\_modtm) (~> 0.3)
-
-- <a name="requirement_random"></a> [random](#requirement\_random) (~> 3.5)
+No requirements.
 
 ## Resources
 
-The following resources are used by this module:
-
-- [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
-- [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
+No resources.
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
@@ -97,6 +121,48 @@ No required inputs.
 ## Optional Inputs
 
 The following input variables are optional (have default values):
+
+### <a name="input_address_prefixes_ordered"></a> [address\_prefixes\_ordered](#input\_address\_prefixes\_ordered)
+
+Description: The size of the subnets
+
+Type: `map(number)`
+
+Default:
+
+```json
+{
+  "a": 28,
+  "b": 26,
+  "c": 26,
+  "d": 27
+}
+```
+
+### <a name="input_address_prefixes_unordered"></a> [address\_prefixes\_unordered](#input\_address\_prefixes\_unordered)
+
+Description: The size of the subnets
+
+Type: `map(number)`
+
+Default:
+
+```json
+{
+  "a": 28,
+  "b": 26,
+  "c": 26,
+  "d": 27
+}
+```
+
+### <a name="input_address_space"></a> [address\_space](#input\_address\_space)
+
+Description: The address space that is used the virtual network in CIDR notation
+
+Type: `string`
+
+Default: `"10.0.0.0/22"`
 
 ### <a name="input_enable_telemetry"></a> [enable\_telemetry](#input\_enable\_telemetry)
 
@@ -110,25 +176,63 @@ Default: `true`
 
 ## Outputs
 
-No outputs.
+The following outputs are exported:
+
+### <a name="output_efficient_address_prefixes_ordered"></a> [efficient\_address\_prefixes\_ordered](#output\_efficient\_address\_prefixes\_ordered)
+
+Description: n/a
+
+### <a name="output_efficient_address_prefixes_ordered_with_details"></a> [efficient\_address\_prefixes\_ordered\_with\_details](#output\_efficient\_address\_prefixes\_ordered\_with\_details)
+
+Description: n/a
+
+### <a name="output_efficient_address_prefixes_unordered"></a> [efficient\_address\_prefixes\_unordered](#output\_efficient\_address\_prefixes\_unordered)
+
+Description: n/a
+
+### <a name="output_efficient_address_prefixes_unordered_with_details"></a> [efficient\_address\_prefixes\_unordered\_with\_details](#output\_efficient\_address\_prefixes\_unordered\_with\_details)
+
+Description: n/a
+
+### <a name="output_inefficient_address_prefixes_ordered"></a> [inefficient\_address\_prefixes\_ordered](#output\_inefficient\_address\_prefixes\_ordered)
+
+Description: n/a
+
+### <a name="output_inefficient_address_prefixes_ordered_with_details"></a> [inefficient\_address\_prefixes\_ordered\_with\_details](#output\_inefficient\_address\_prefixes\_ordered\_with\_details)
+
+Description: n/a
+
+### <a name="output_inefficient_address_prefixes_unordered"></a> [inefficient\_address\_prefixes\_unordered](#output\_inefficient\_address\_prefixes\_unordered)
+
+Description: n/a
+
+### <a name="output_inefficient_address_prefixes_unordered_with_details"></a> [inefficient\_address\_prefixes\_unordered\_with\_details](#output\_inefficient\_address\_prefixes\_unordered\_with\_details)
+
+Description: n/a
 
 ## Modules
 
 The following Modules are called:
 
-### <a name="module_naming"></a> [naming](#module\_naming)
+### <a name="module_efficient_address_prefixes_ordered"></a> [efficient\_address\_prefixes\_ordered](#module\_efficient\_address\_prefixes\_ordered)
 
-Source: Azure/naming/azurerm
+Source: ../../
 
-Version: ~> 0.3
+Version:
 
-### <a name="module_regions"></a> [regions](#module\_regions)
+### <a name="module_efficient_address_prefixes_unordered"></a> [efficient\_address\_prefixes\_unordered](#module\_efficient\_address\_prefixes\_unordered)
 
-Source: Azure/avm-utl-regions/azurerm
+Source: ../../
 
-Version: ~> 0.1
+Version:
 
-### <a name="module_test"></a> [test](#module\_test)
+### <a name="module_inefficient_address_prefixes_ordered"></a> [inefficient\_address\_prefixes\_ordered](#module\_inefficient\_address\_prefixes\_ordered)
+
+Source: ../../
+
+Version:
+
+### <a name="module_inefficient_address_prefixes_unordered"></a> [inefficient\_address\_prefixes\_unordered](#module\_inefficient\_address\_prefixes\_unordered)
 
 Source: ../../
 

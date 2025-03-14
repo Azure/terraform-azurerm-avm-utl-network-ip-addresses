@@ -1,34 +1,25 @@
-# TODO: insert locals here.
 locals {
-  managed_identities = {
-    system_assigned_user_assigned = (var.managed_identities.system_assigned || length(var.managed_identities.user_assigned_resource_ids) > 0) ? {
-      this = {
-        type                       = var.managed_identities.system_assigned && length(var.managed_identities.user_assigned_resource_ids) > 0 ? "SystemAssigned, UserAssigned" : length(var.managed_identities.user_assigned_resource_ids) > 0 ? "UserAssigned" : "SystemAssigned"
-        user_assigned_resource_ids = var.managed_identities.user_assigned_resource_ids
-      }
-    } : {}
-    system_assigned = var.managed_identities.system_assigned ? {
-      this = {
-        type = "SystemAssigned"
-      }
-    } : {}
-    user_assigned = length(var.managed_identities.user_assigned_resource_ids) > 0 ? {
-      this = {
-        type                       = "UserAssigned"
-        user_assigned_resource_ids = var.managed_identities.user_assigned_resource_ids
-      }
-    } : {}
-  }
-  # Private endpoint application security group associations.
-  # We merge the nested maps from private endpoints and application security group associations into a single map.
-  private_endpoint_application_security_group_associations = { for assoc in flatten([
-    for pe_k, pe_v in var.private_endpoints : [
-      for asg_k, asg_v in pe_v.application_security_group_associations : {
-        asg_key         = asg_k
-        pe_key          = pe_k
-        asg_resource_id = asg_v
-      }
-    ]
-  ]) : "${assoc.pe_key}-${assoc.asg_key}" => assoc }
-  role_definition_resource_substring = "/providers/Microsoft.Authorization/roleDefinitions"
+  address_space_size  = tonumber(local.address_space_split[1])
+  address_space_split = split("/", var.address_space)
+}
+
+locals {
+  efficient_prefix_cidr_ranges   = cidrsubnets(var.address_space, local.efficient_prefix_new_bits...)
+  efficient_prefix_keys          = keys(local.efficient_prefix_order_by_size)
+  efficient_prefix_new_bits      = [for size in values(local.efficient_prefix_order_by_size) : size - local.address_space_size]
+  efficient_prefix_order_by_size = { for key, value in var.address_prefixes : "${format("%03s", value)}||${key}" => value }
+}
+
+locals {
+  efficient_prefixes = { for key, value in local.efficient_prefix_order_by_size : split("||", key)[1] => local.efficient_prefix_cidr_ranges[index(local.efficient_prefix_keys, key)] }
+}
+
+locals {
+  inefficient_prefix_cidr_ranges = cidrsubnets(var.address_space, local.inefficient_prefix_new_bits...)
+  inefficient_prefix_keys        = keys(var.address_prefixes)
+  inefficient_prefix_new_bits    = [for size in values(var.address_prefixes) : size - local.address_space_size]
+}
+
+locals {
+  inefficient_prefixes = { for key, value in var.address_prefixes : key => local.inefficient_prefix_cidr_ranges[index(local.inefficient_prefix_keys, key)] }
 }
