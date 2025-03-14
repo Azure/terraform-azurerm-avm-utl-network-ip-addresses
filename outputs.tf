@@ -1,6 +1,15 @@
-output "private_endpoints" {
-  description = <<DESCRIPTION
-  A map of the private endpoints created.
-  DESCRIPTION
-  value       = var.private_endpoints_manage_dns_zone_group ? azurerm_private_endpoint.this_managed_dns_zone_groups : azurerm_private_endpoint.this_unmanaged_dns_zone_groups
+output "address_prefixes" {
+  description = "The calculated address prefixes as CIDR ranges"
+  value       = var.address_prefix_efficient_mode ? local.efficient_prefixes : local.inefficient_prefixes
+}
+
+output "address_prefixes_with_details" {
+  description = "The calculated address prefixes as CIDR ranges with input details"
+  value = {
+    for key, value in var.address_prefixes :
+    key => {
+      cidr_range = var.address_prefix_efficient_mode ? local.efficient_prefixes[key] : local.inefficient_prefixes[key]
+      size       = value
+    }
+  }
 }
