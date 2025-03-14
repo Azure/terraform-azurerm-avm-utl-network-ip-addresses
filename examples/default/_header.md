@@ -1,3 +1,3 @@
 # Default example
 
-This example demonstates different ways to use the module.
+This example demonstrates different ways to use the module.
