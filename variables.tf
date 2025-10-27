@@ -1,21 +1,3 @@
-variable "address_prefixes" {
-  type        = map(number)
-  description = <<DESCRIPTION
-The desired prefixes with their CIDR range size
-
-For example:
-
-  {
-    "a" = 28
-    "b" = 26
-    "c" = 26
-    "d" = 27
-  }
-
-DESCRIPTION
-  nullable    = false
-}
-
 variable "address_space" {
   type        = string
   description = "The address space to create the prefixes from in CIDR notation"
@@ -68,6 +50,26 @@ DESCRIPTION
   nullable    = false
 }
 
+variable "address_prefixes" {
+  type        = map(number)
+  default     = null
+  description = <<DESCRIPTION
+The desired prefixes with their CIDR range size
+
+For example:
+
+  {
+    "a" = 28
+    "b" = 26
+    "c" = 26
+    "d" = 27
+  }
+
+Note: Either address_prefixes or number_of_ip_addresses must be specified, but not both.
+
+DESCRIPTION
+}
+
 variable "enable_telemetry" {
   type        = bool
   default     = true
@@ -77,4 +79,30 @@ For more information see <https://aka.ms/avm/telemetryinfo>.
 If it is set to false, then no telemetry will be collected.
 DESCRIPTION
   nullable    = false
+}
+
+variable "number_of_ip_addresses" {
+  type        = map(number)
+  default     = null
+  description = <<DESCRIPTION
+The desired prefixes with the number of IP addresses needed for each prefix.
+The module will automatically calculate the appropriate CIDR prefix size.
+
+For example:
+
+  {
+    "web-subnet"    = 8
+    "app-subnet"    = 64
+    "db-subnet"     = 16
+    "mgmt-subnet"   = 32
+  }
+
+Note: Either address_prefixes or number_of_ip_addresses must be specified, but not both.
+
+DESCRIPTION
+
+  validation {
+    condition     = var.number_of_ip_addresses != null ? alltrue([for k, v in var.number_of_ip_addresses : v >= 1 && v <= 16777216]) : true
+    error_message = "Number of IP addresses must be between 1 and 16,777,216 for each prefix."
+  }
 }
