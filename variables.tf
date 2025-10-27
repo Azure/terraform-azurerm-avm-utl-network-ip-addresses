@@ -68,6 +68,14 @@ For example:
 Note: Either address_prefixes or number_of_ip_addresses must be specified, but not both.
 
 DESCRIPTION
+
+  validation {
+    condition = (
+      (var.address_prefixes != null && var.number_of_ip_addresses == null) ||
+      (var.address_prefixes == null && var.number_of_ip_addresses != null)
+    )
+    error_message = "Exactly one of 'address_prefixes' or 'number_of_ip_addresses' must be specified, but not both."
+  }
 }
 
 variable "enable_telemetry" {

@@ -1,14 +1,3 @@
-# Validation to ensure either address_prefixes or number_of_ip_addresses is provided
-locals {
-  inputs_count = sum(local.inputs_provided)
-  inputs_provided = [
-    var.address_prefixes != null ? 1 : 0,
-    var.number_of_ip_addresses != null ? 1 : 0
-  ]
-  # Validate exactly one input method is provided
-  validate_inputs = local.inputs_count == 1
-}
-
 # Convert numberOfIPAddresses to CIDR prefixes
 locals {
   # Use either the provided CIDR prefixes or the converted ones
@@ -18,8 +7,6 @@ locals {
     for key, ip_count in var.number_of_ip_addresses :
     key => 32 - ceil(log(ip_count, 2))
   } : {}
-  # Validation check - will cause error if not exactly one input is provided
-  validation_check = local.validate_inputs ? null : file("ERROR: Exactly one of address_prefixes or number_of_ip_addresses must be specified.")
 }
 
 locals {
