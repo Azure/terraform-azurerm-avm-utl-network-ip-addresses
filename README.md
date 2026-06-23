@@ -4,6 +4,15 @@
 
 This module generates IPv4 CIDR address prefixes for a specified address space. It is not a replacement for a full IPAM solution, but can be used in simple cases where a full IPAM solution is not needed.
 
+## What it does
+
+This module helps you divide a network address space into smaller subnets. You can use it in two ways:
+
+- **Traditional approach**: Specify CIDR prefix sizes (like /24, /26, /28)
+- **IP count approach**: Just say how many IP addresses you need and the module calculates the right CIDR size
+
+The module can optimize subnet placement for efficient use of your address space or keep them in the order you specify.
+
 <!-- markdownlint-disable MD033 -->
 ## Requirements
 
@@ -30,21 +39,6 @@ The following resources are used by this module:
 ## Required Inputs
 
 The following input variables are required:
-
-### <a name="input_address_prefixes"></a> [address\_prefixes](#input\_address\_prefixes)
-
-Description: The desired prefixes with their CIDR range size
-
-For example:
-
-  {
-    "a" = 28
-    "b" = 26
-    "c" = 26
-    "d" = 27
-  }
-
-Type: `map(number)`
 
 ### <a name="input_address_space"></a> [address\_space](#input\_address\_space)
 
@@ -95,6 +89,25 @@ Type: `bool`
 
 Default: `true`
 
+### <a name="input_address_prefixes"></a> [address\_prefixes](#input\_address\_prefixes)
+
+Description: The desired prefixes with their CIDR range size
+
+For example:
+
+  {
+    "a" = 28
+    "b" = 26
+    "c" = 26
+    "d" = 27
+  }
+
+Note: Either address\_prefixes or number\_of\_ip\_addresses must be specified, but not both.
+
+Type: `map(number)`
+
+Default: `null`
+
 ### <a name="input_enable_telemetry"></a> [enable\_telemetry](#input\_enable\_telemetry)
 
 Description: This variable controls whether or not telemetry is enabled for the module.  
@@ -104,6 +117,26 @@ If it is set to false, then no telemetry will be collected.
 Type: `bool`
 
 Default: `true`
+
+### <a name="input_number_of_ip_addresses"></a> [number\_of\_ip\_addresses](#input\_number\_of\_ip\_addresses)
+
+Description: The desired prefixes with the number of IP addresses needed for each prefix.  
+The module will automatically calculate the appropriate CIDR prefix size.
+
+For example:
+
+  {
+    "web-subnet"    = 8
+    "app-subnet"    = 64
+    "db-subnet"     = 16
+    "mgmt-subnet"   = 32
+  }
+
+Note: Either address\_prefixes or number\_of\_ip\_addresses must be specified, but not both.
+
+Type: `map(number)`
+
+Default: `null`
 
 ## Outputs
 
