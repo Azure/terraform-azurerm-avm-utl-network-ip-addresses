@@ -5,9 +5,6 @@
 This example demonstrates different ways to use the module.
 
 ```hcl
-
-
-
 # This is the module call
 module "efficient_address_prefixes_ordered" {
   source = "../../"
@@ -42,14 +39,6 @@ module "inefficient_address_prefixes_unordered" {
   address_prefix_efficient_mode = false
   enable_telemetry              = var.enable_telemetry
 }
-
-
-
-
-
-
-
-
 ```
 
 <!-- markdownlint-disable MD033 -->
