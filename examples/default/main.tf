@@ -4,7 +4,7 @@ module "efficient_address_prefixes_ordered" {
 
   address_prefixes = var.address_prefixes_ordered
   address_space    = var.address_space
-  enable_telemetry = false
+  enable_telemetry = var.enable_telemetry
 }
 
 module "inefficient_address_prefixes_ordered" {
@@ -13,7 +13,7 @@ module "inefficient_address_prefixes_ordered" {
   address_prefixes              = var.address_prefixes_ordered
   address_space                 = var.address_space
   address_prefix_efficient_mode = false
-  enable_telemetry              = false
+  enable_telemetry              = var.enable_telemetry
 }
 
 module "efficient_address_prefixes_unordered" {
@@ -21,7 +21,7 @@ module "efficient_address_prefixes_unordered" {
 
   address_prefixes = var.address_prefixes_unordered
   address_space    = var.address_space
-  enable_telemetry = false
+  enable_telemetry = var.enable_telemetry
 }
 
 module "inefficient_address_prefixes_unordered" {
@@ -30,5 +30,5 @@ module "inefficient_address_prefixes_unordered" {
   address_prefixes              = var.address_prefixes_unordered
   address_space                 = var.address_space
   address_prefix_efficient_mode = false
-  enable_telemetry              = false
+  enable_telemetry              = var.enable_telemetry
 }
