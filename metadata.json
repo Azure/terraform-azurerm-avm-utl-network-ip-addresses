@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/azure-verified-modules-tools/main/src/Avm.Authoring/Resources/Schemas/v1/avm-module-metadata.schema.json",
+  "moduleDisplayName": "AVM Network IP Addresses",
+  "moduleDescription": "Azure Verified Utility Module for generating IPv4 CIDR address prefixes",
+  "canonicalType": "network-ip-addresses",
+  "owners": [
+    "jaredfholgate"
+  ]
+}
