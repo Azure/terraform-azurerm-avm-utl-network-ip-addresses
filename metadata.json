@@ -5,5 +5,8 @@
   "canonicalType": "network-ip-addresses",
   "owners": [
     "jaredfholgate"
+  ],
+  "alternativeNames": [
+    "IPv4 CIDR"
   ]
 }
