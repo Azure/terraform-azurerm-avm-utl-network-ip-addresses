@@ -68,13 +68,13 @@ DESCRIPTION
   nullable    = false
 }
 
+# Retain this no-op input so existing module calls remain compatible.
+# tflint-ignore: terraform_unused_declarations
 variable "enable_telemetry" {
   type        = bool
   default     = true
   description = <<DESCRIPTION
-This variable controls whether or not telemetry is enabled for the module.
-For more information see <https://aka.ms/avm/telemetryinfo>.
-If it is set to false, then no telemetry will be collected.
+This variable is retained for backward compatibility. This utility module does not deploy Azure resources or collect telemetry, so this value has no effect.
 DESCRIPTION
   nullable    = false
 }
