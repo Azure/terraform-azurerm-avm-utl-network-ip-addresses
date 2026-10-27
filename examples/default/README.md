@@ -103,9 +103,7 @@ Default: `"10.0.0.0/22"`
 
 ### <a name="input_enable_telemetry"></a> [enable\_telemetry](#input\_enable\_telemetry)
 
-Description: This variable controls whether or not telemetry is enabled for the module.  
-For more information see <https://aka.ms/avm/telemetryinfo>.  
-If it is set to false, then no telemetry will be collected.
+Description: This variable is retained for backward compatibility. This utility module does not deploy Azure resources or collect telemetry, so this value has no effect.
 
 Type: `bool`
 
