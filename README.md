@@ -4,6 +4,8 @@
 
 This module generates IPv4 CIDR address prefixes for a specified address space. It is not a replacement for a full IPAM solution, but can be used in simple cases where a full IPAM solution is not needed.
 
+This resource-free utility does not collect telemetry. When upgrading, remove `enable_telemetry` from module calls; this input is no longer supported.
+
 <!-- markdownlint-disable MD033 -->
 ## Requirements
 
@@ -11,20 +13,9 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.9, < 2.0)
 
-- <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) (~> 2.12)
-
-- <a name="requirement_modtm"></a> [modtm](#requirement\_modtm) (~> 0.3)
-
-- <a name="requirement_random"></a> [random](#requirement\_random) (~> 3.5)
-
 ## Resources
 
-The following resources are used by this module:
-
-- [modtm_telemetry.telemetry](https://registry.terraform.io/providers/azure/modtm/latest/docs/resources/telemetry) (resource)
-- [random_uuid.telemetry](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/uuid) (resource)
-- [azapi_client_config.telemetry](https://registry.terraform.io/providers/Azure/azapi/latest/docs/data-sources/client_config) (data source)
-- [modtm_module_source.telemetry](https://registry.terraform.io/providers/azure/modtm/latest/docs/data-sources/module_source) (data source)
+No resources.
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
@@ -90,16 +81,6 @@ If it is set to false, then the address prefixes will be created in the order sp
   }
 
 WARNING: When using efficient mode, if you later add more prefixes to the map, the prefixes will be regenerated in the mosrt efficient order, so the original ordering may change.
-
-Type: `bool`
-
-Default: `true`
-
-### <a name="input_enable_telemetry"></a> [enable\_telemetry](#input\_enable\_telemetry)
-
-Description: This variable controls whether or not telemetry is enabled for the module.  
-For more information see <https://aka.ms/avm/telemetryinfo>.  
-If it is set to false, then no telemetry will be collected.
 
 Type: `bool`
 

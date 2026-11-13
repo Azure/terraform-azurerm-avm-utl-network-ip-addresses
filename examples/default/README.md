@@ -11,7 +11,6 @@ module "efficient_address_prefixes_ordered" {
 
   address_prefixes = var.address_prefixes_ordered
   address_space    = var.address_space
-  enable_telemetry = var.enable_telemetry
 }
 
 module "inefficient_address_prefixes_ordered" {
@@ -20,7 +19,6 @@ module "inefficient_address_prefixes_ordered" {
   address_prefixes              = var.address_prefixes_ordered
   address_space                 = var.address_space
   address_prefix_efficient_mode = false
-  enable_telemetry              = var.enable_telemetry
 }
 
 module "efficient_address_prefixes_unordered" {
@@ -28,7 +26,6 @@ module "efficient_address_prefixes_unordered" {
 
   address_prefixes = var.address_prefixes_unordered
   address_space    = var.address_space
-  enable_telemetry = var.enable_telemetry
 }
 
 module "inefficient_address_prefixes_unordered" {
@@ -37,7 +34,6 @@ module "inefficient_address_prefixes_unordered" {
   address_prefixes              = var.address_prefixes_unordered
   address_space                 = var.address_space
   address_prefix_efficient_mode = false
-  enable_telemetry              = var.enable_telemetry
 }
 ```
 
@@ -100,16 +96,6 @@ Description: The address space that is used the virtual network in CIDR notation
 Type: `string`
 
 Default: `"10.0.0.0/22"`
-
-### <a name="input_enable_telemetry"></a> [enable\_telemetry](#input\_enable\_telemetry)
-
-Description: This variable controls whether or not telemetry is enabled for the module.  
-For more information see <https://aka.ms/avm/telemetryinfo>.  
-If it is set to false, then no telemetry will be collected.
-
-Type: `bool`
-
-Default: `true`
 
 ## Outputs
 

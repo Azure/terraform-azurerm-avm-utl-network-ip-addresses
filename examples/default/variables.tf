@@ -25,13 +25,3 @@ variable "address_space" {
   default     = "10.0.0.0/22"
   description = "The address space that is used the virtual network in CIDR notation"
 }
-
-variable "enable_telemetry" {
-  type        = bool
-  default     = true
-  description = <<DESCRIPTION
-This variable controls whether or not telemetry is enabled for the module.
-For more information see <https://aka.ms/avm/telemetryinfo>.
-If it is set to false, then no telemetry will be collected.
-DESCRIPTION
-}
