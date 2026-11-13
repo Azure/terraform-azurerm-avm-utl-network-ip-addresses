@@ -67,14 +67,3 @@ WARNING: When using efficient mode, if you later add more prefixes to the map, t
 DESCRIPTION
   nullable    = false
 }
-
-# Retain this no-op input so existing module calls remain compatible.
-# tflint-ignore: terraform_unused_declarations
-variable "enable_telemetry" {
-  type        = bool
-  default     = true
-  description = <<DESCRIPTION
-This variable is retained for backward compatibility. This utility module does not deploy Azure resources or collect telemetry, so this value has no effect.
-DESCRIPTION
-  nullable    = false
-}

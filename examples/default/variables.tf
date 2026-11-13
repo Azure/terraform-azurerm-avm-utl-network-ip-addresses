@@ -25,11 +25,3 @@ variable "address_space" {
   default     = "10.0.0.0/22"
   description = "The address space that is used the virtual network in CIDR notation"
 }
-
-variable "enable_telemetry" {
-  type        = bool
-  default     = true
-  description = <<DESCRIPTION
-This variable is retained for backward compatibility. This utility module does not deploy Azure resources or collect telemetry, so this value has no effect.
-DESCRIPTION
-}

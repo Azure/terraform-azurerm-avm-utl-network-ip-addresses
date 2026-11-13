@@ -4,6 +4,8 @@
 
 This module generates IPv4 CIDR address prefixes for a specified address space. It is not a replacement for a full IPAM solution, but can be used in simple cases where a full IPAM solution is not needed.
 
+This resource-free utility does not collect telemetry. When upgrading, remove `enable_telemetry` from module calls; this input is no longer supported.
+
 <!-- markdownlint-disable MD033 -->
 ## Requirements
 
@@ -79,14 +81,6 @@ If it is set to false, then the address prefixes will be created in the order sp
   }
 
 WARNING: When using efficient mode, if you later add more prefixes to the map, the prefixes will be regenerated in the mosrt efficient order, so the original ordering may change.
-
-Type: `bool`
-
-Default: `true`
-
-### <a name="input_enable_telemetry"></a> [enable\_telemetry](#input\_enable\_telemetry)
-
-Description: This variable is retained for backward compatibility. This utility module does not deploy Azure resources or collect telemetry, so this value has no effect.
 
 Type: `bool`
 
